@@ -21,12 +21,18 @@ with mp_face_mesh.FaceMesh(
 
         image.flags.writeable = False
         results = face_mesh.process(image)#얼굴 렌드마크 처리
-
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)#rgb값으로 변경
+        
+        filter_number = int(input())
+        filter_image = filter.checknumber(filter_number)
+        
+        if filter_image == 0:
+            exit() 
+
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
                 save_image = picture.start_take(mp_drawing,image,face_landmarks,mp_face_mesh)#프레임 단위로 실시간 이미지 변수 처리.
-            
+
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 picture.picture_save(save_image)
         image_bgr = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
