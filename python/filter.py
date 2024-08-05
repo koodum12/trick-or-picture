@@ -1,9 +1,9 @@
 import cv2
 from PIL import Image
+import filter
 import mediapipe
 
-def __init__():
-  pass
+
 def checknumber(filter_number):
   if filter_number == 1:
     return first()
@@ -16,4 +16,4 @@ def first():
   return filter_image
 
 def seconde():
-  return
+  return 0
