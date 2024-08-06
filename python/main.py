@@ -1,12 +1,16 @@
 import cv2
 import mediapipe as mp # 구글에서 불러온 mediapipe 라이브러리 불러오기 
-import filter
+import filter #필터라는 라이브러리가 다른게 또 있네?
 import keyboard
 import picture
 
 mp_drawing = mp.solutions.drawing_utils #랜드마크 표시
-mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) #
+mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
 mp_face_mesh = mp.solutions.face_mesh
+filter_number = int(input())
+filter_image_path = filter.checknumber(filter_number)
+if filter_image_path == 0:
+    exit()
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 with mp_face_mesh.FaceMesh(
@@ -23,16 +27,10 @@ with mp_face_mesh.FaceMesh(
         image.flags.writeable = False
         results = face_mesh.process(image)#얼굴 렌드마크 처리
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)#rgb값으로 변경
-        
-        filter_number = int(input())
-        filter_image = filter.checknumber(filter_number)
-        
-        if filter_image == 0:
-            exit() 
 
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-                save_image = picture.start_take(mp_drawing,image,face_landmarks,mp_face_mesh)#프레임 단위로 실시간 이미지 변수 처리.
+                save_image = picture.start_take(filter_image_path,mp_drawing,image,face_landmarks,mp_face_mesh)#프레임 단위로 실시간 이미지 변수 처리.
 
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 picture.picture_save(save_image)

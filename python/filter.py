@@ -1,6 +1,6 @@
 import cv2
 from PIL import Image
-import filter
+import python.filter as filter
 import mediapipe
 
 
@@ -11,7 +11,7 @@ def checknumber(filter_number):
     print("error:뭐시꺵이 저시깽이")
     return 0
 def first():
-  filter_image = [r'C:\Users\user\Desktop\Obsidian\trick-or-picture\img\1.png']
+  filter_image = r'C:\Users\user\Desktop\Obsidian\trick-or-picture\img\1.png'
 
   return filter_image
 
