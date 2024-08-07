@@ -31,20 +31,19 @@ with mp_face_mesh.FaceMesh(
         results = face_mesh.process(image)#얼굴 렌드마크 처리
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)#rgb값으로 변경
 
-        landmark_index = 33 #고칠거임
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
                 landmark_168 = face_landmarks.landmark[168] #168 = 얼굴 정 중앙()
                 landmark_168_x = landmark_168.x
                 landmark_168_y = landmark_168.y
-                #1.이미지 파일 경로 2.랜드마크 시각표현 사용 3.랜드마크 좌표 반환 4.얼굴 랜드마크와 연결정보 처리 5.사용할 landmark index 6.기본 이미지(동영상)
-                save_image = picture.start_take(filter_image_path,mp_drawing,face_landmarks,mp_face_mesh,landmark_index,image)#프레임 단위로 실시간 이미지 변수 처리.
+                #1.이미지 파일 경로  2. 기본 이미지(동영상) 3.x좌표 4.y좌표
+                save_image = picture.start_take(filter_image_path,image,landmark_168_x,landmark_168_y)#프레임 단위로 실시간 이미지 변수 처리.
             
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 picture.picture_save(save_image)
         
-        image_bgr = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
-        cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(image_bgr, 1))#
+        save_image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+        cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))#
         if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기 
             break
         '''
