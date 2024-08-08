@@ -4,6 +4,9 @@ import sys
 import filter #필터라는 라이브러리가 다른게 또 있네?
 import keyboard
 import picture
+import requests
+image_width = 640              
+image_height = 480 
 
 mp_drawing = mp.solutions.drawing_utils #랜드마크 표시
 mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
@@ -33,19 +36,23 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-                landmark_168 = face_landmarks.landmark[168] #168 = 얼굴 정 중앙()
-                landmark_168_x = landmark_168.x
-                landmark_168_y = landmark_168.y
+
+                landmark_168 = face_landmarks.landmark[168]
+                landmark_168_x = int(landmark_168.x * image_width)
+                landmark_168_y = int(landmark_168.y * image_height)
+                #print(landmark_168_x, landmark_168_y)
                 #1.이미지 파일 경로  2. 기본 이미지(동영상) 3.x좌표 4.y좌표
                 save_image = picture.start_take(filter_image_path,image,landmark_168_x,landmark_168_y)#프레임 단위로 실시간 이미지 변수 처리.
             
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 picture.picture_save(save_image)
+
+            save_image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+            cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))#
+            if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
+            
+                break
         
-        save_image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
-        cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))#
-        if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기 
-            break
         '''
             1.영상 촬영 정지
             2.landmark표시 정지
