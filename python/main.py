@@ -5,11 +5,13 @@ import filter #필터라는 라이브러리가 다른게 또 있네?
 import keyboard
 import picture
 import requests
+
+
 image_width = 640              
 image_height = 480 
 
-mp_drawing = mp.solutions.drawing_utils #랜드마크 표시
-mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
+#mp_drawing = mp.solutions.drawing_utils #랜드마크 표시
+#mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
 mp_face_mesh = mp.solutions.face_mesh
 
 filter_number = int(input())
@@ -20,7 +22,7 @@ if filter_image_path == "fail":
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 with mp_face_mesh.FaceMesh(
-        max_num_faces=1,
+        max_num_faces=10,
         refine_landmarks=True,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as face_mesh: #1.얼굴 감지 갯수,2.랜드마크 정밀 조작,3.얼굴 감지 정확도 최소,4.얼굴 추적 최소 정확도.
@@ -36,14 +38,34 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-
                 landmark_168 = face_landmarks.landmark[168]
                 landmark_168_x = int(landmark_168.x * image_width)
                 landmark_168_y = int(landmark_168.y * image_height)
+
+                landmark_225 = face_landmarks.landmark[225]
+                landmark_225_x = int(landmark_225.x*image_width)
+
+                landmark_446 = face_landmarks.landmark[446]
+                landmark_446_x = int(landmark_446.x*image_width)
+
+                landmark_9 = face_landmarks.landmark[9]
+                landmark_9_y = int(landmark_9.y * image_height)
+
+                landmark_6 = face_landmarks.landmark[6]
+                landmark_6_y = int(landmark_6.y * image_height)
+
+                #filter_width = landmark_225_x - landmark_446_x
+                #filter_height = landmark_9_y - landmark_6_y 
+
+
+
                 #print(landmark_168_x, landmark_168_y)
                 #1.이미지 파일 경로  2. 기본 이미지(동영상) 3.x좌표 4.y좌표
-                save_image = picture.start_take(filter_image_path,image,landmark_168_x,landmark_168_y)#프레임 단위로 실시간 이미지 변수 처리.
-            
+                save_image = picture.start_take(
+                    filter_image_path,image,landmark_168_x,landmark_168_y,
+                    landmark_225_x,landmark_446_x,landmark_9_y,landmark_6_y
+                    )#프레임 단위로 실시간 이미지 변수 처리.
+                
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 picture.picture_save(save_image)
 

@@ -1,61 +1,51 @@
 import cv2
 import mediapipe as mp
-import keyboard
-from PIL import Image
+import imutils
+from math import hypot
 
 
 
-import numpy as np
+def start_take(filter_image_path,image,x,y,
+               landmark_225_x,landmark_446_x,landmark_9_y,landmark_6_y):#filter이미지 만든 후 꼭 매게변수 추가하기
+  #face_point = .landmark.landmark_index
+  if filter_image_path is None:
+          print("이미지? 그게 뭐꼬? 그런거 없으니까 돌아가라")
+          return None
+  image = imutils.resize(image, width=750,height = 500)
 
-def start_take(filter_image_path, image, landmark_168_x, landmark_168_y):
-    # 필터 이미지 로드 (알파 채널 포함)
-    filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
-    
-    if filter_image is None:
-        raise ValueError("Filter image not found or unable to load.")
-    
-    # 필터 이미지에 알파 채널이 없는 경우 처리
-    if filter_image.shape[2] == 3:
-        raise ValueError("Filter image does not have an alpha channel.")
+  filter_image = cv2.imread(filter_image_path,cv2.IMREAD_UNCHANGED)
 
-    # 필터 이미지 크기 조정
-    filter_image = cv2.resize(filter_image, (50, 100))
+  filter_image = cv2.resize(filter_image,(filter_height,filter_width)) #filter이미지 크기 조절(조정 예정)
 
-    # 알파 채널 분리
-    filter_alpha = filter_image[:, :, 3] / 255.0
-    filter_rgb = filter_image[:, :, :3]
 
-    image_alpha = 1.0 - filter_alpha
+  filter_width = int(hypot(landmark_446_x-landmark_225_x, landmark_9_y-landmark_6_y*1.2))
+  filter_height = int(filter_width*0.77)
 
-    # 적용 영역 계산
-    x1, y1 = landmark_168_x, landmark_168_y
-    x2, y2 = x1 + filter_image.shape[1], y1 + filter_image.shape[0]
+  if filter_width != 0:
+      filter_image = cv2.resize(filter_image(filter_width,filter_height))
 
-    # 이미지 경계를 넘어가지 않도록 조정
-    if x2 > image.shape[1]:
-        x2 = image.shape[1]
-    if y2 > image.shape[0]:
-        y2 = image.shape[0]
-    
-    if x1 < 0: x1 = 0
-    if y1 < 0: y1 = 0
+  top_left = (int(x-filter_width/2),int(y-filter_height/2))
+  bottom_right = (int(x+filter_width/2),int(y+filter_height/2))
+  #------------------------------------------------------------------------- 여기서부터 고칠거임
 
-    # 조정된 크기에 맞게 필터 이미지 조정
-    filter_rgb = filter_rgb[:y2-y1, :x2-x1]
-    filter_alpha = filter_alpha[:y2-y1, :x2-x1]
-    image_alpha = image_alpha[:y2-y1, :x2-x1]
+  '''
+  #[행:열:]
+  filter_alpha = filter_image[:,3] /255.0
 
-    # 원본 이미지에서 ROI 선택
-    roi = image[y1:y2, x1:x2]
+  image_alpha = 1.0 - filter_alpha
 
-    # 필터 적용
-    for c in range(3):  # 3 채널 (RGB)
-        roi[:, :, c] = (filter_alpha * filter_rgb[:, :, c] + image_alpha * roi[:, :, c])
+  image[x:y,50:100] = filter_alpha * filter_image[:,3] + image_alpha * filter_image[:,3]
+  return image
+  '''
 
-    image[y1:y2, x1:x2] = roi
-
-    return image
-
+  '''mp_drawing_styles = mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) #랜드마크 위에 object를 어떻게 띄울지 (mediapipe 함수)
+  save_image = mp_drawing.draw_landmarks(
+    image=image,
+    landmark_list=face_landmarks,
+    connections=mp_face_mesh.FACEMESH_IRISES,
+    landmark_drawing_spec=None,connection_drawing_spec=mp_drawing_styles)
+  '''
+  #return save_image
     
 def picture_save(save_image):
   print(1)
