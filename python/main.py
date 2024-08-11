@@ -54,15 +54,16 @@ with mp_face_mesh.FaceMesh(
                 landmark_6 = face_landmarks.landmark[6]
                 landmark_6_y = int(landmark_6.y * image_height)
 
-                #filter_width = landmark_225_x - landmark_446_x
-                #filter_height = landmark_9_y - landmark_6_y 
-
+                filter_width = landmark_446_x - landmark_225_x
+                filter_height = landmark_6_y - landmark_9_y 
+                print(filter_height,filter_width)
 
 
                 #print(landmark_168_x, landmark_168_y)
                 #1.이미지 파일 경로  2. 기본 이미지(동영상) 3.x좌표 4.y좌표
                 save_image = picture.start_take(
                     filter_image_path,image,landmark_168_x,landmark_168_y,
+                    filter_height,filter_width,
                     landmark_225_x,landmark_446_x,landmark_9_y,landmark_6_y
                     )#프레임 단위로 실시간 이미지 변수 처리.
                 
