@@ -2,9 +2,8 @@ import cv2
 import mediapipe as mp # 구글에서 불러온 mediapipe 라이브러리 불러오기
 import sys 
 import filter #필터라는 라이브러리가 다른게 또 있네?
-import keyboard
 import picture
-import requests
+import time
 
 
 image_width = 640              
@@ -27,6 +26,7 @@ with mp_face_mesh.FaceMesh(
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as face_mesh: #1.얼굴 감지 갯수,2.랜드마크 정밀 조작,3.얼굴 감지 정확도 최소,4.얼굴 추적 최소 정확도.
     while cap.isOpened():#웹캠 열려있을 때.
+        time.sleep(1)
         success, image = cap.read()#프레임 읽어오는 함수 success = 제대로 읽혔는지 image = 프레임별 이미지
         if not success:#
             print("웹캠을 찾을 수 없습니다,큰일났습니다.")
