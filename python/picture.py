@@ -28,7 +28,7 @@ def start_take(filter_image_path,image,x,y,
   filter_image = cv2.imread(filter_image_path,cv2.IMREAD_UNCHANGED)
 
   filter_image = cv2.resize(filter_image,(filter_height,filter_width)) #filter이미지 크기 조절(조정 예정)
-  print(image.shape,filter_image.shape)
+  #print(image.shape,filter_image.shape)
 
   filter_width = int(hypot(landmark_446_x-landmark_225_x, landmark_9_y-landmark_6_y*1.2))
   filter_height = int(filter_width*0.77)
@@ -39,7 +39,7 @@ def start_take(filter_image_path,image,x,y,
   top_left = (int(x-filter_width/2),int(y-filter_height/2))
   bottom_right = (int(x+filter_width/2),int(y+filter_height/2))
   #------------------------------------------------------------------------- 여기서부터 고칠거임
-  print(filter_height,filter_width)
+  #print(filter_height,filter_width)
   filter_area = image[
     top_left[1]: top_left[1]+filter_height,
     top_left[0]: top_left[0]+filter_width
@@ -55,11 +55,11 @@ def start_take(filter_image_path,image,x,y,
 
   filter_area = filter_area.astype('uint8')
   filter_mask = filter_mask.astype('uint8')
-  print("filter_area shape:", filter_area.shape)
-  print("filter_mask shape:", filter_mask.shape)
   filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
   filter_area = cv2.resize(filter_area,(filter_width,filter_height))
-  print(type(filter_area),type(filter_mask))
+  #print("filter_area shape:", filter_area.shape)
+  #print("filter_mask shape:", filter_mask.shape)
+  #print(type(filter_area),type(filter_mask))
   
   no_filter = cv2.bitwise_and(filter_area, filter_area, mask=filter_mask)
   
@@ -93,5 +93,7 @@ def start_take(filter_image_path,image,x,y,
   #return save_image
     
 def picture_save(save_image):
-  print(1)
+  count = count + 1
+  cv2.imwrite("fr'{count}_filter_image.jpg'",save_image)
+  print("이미지 저장 완료")
   return 0
