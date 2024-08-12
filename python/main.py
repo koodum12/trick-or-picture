@@ -8,7 +8,7 @@ import time
 
 image_width = 640              
 image_height = 480 
-
+count = int(0)
 #mp_drawing = mp.solutions.drawing_utils #랜드마크 표시
 #mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
 mp_face_mesh = mp.solutions.face_mesh
@@ -67,7 +67,8 @@ with mp_face_mesh.FaceMesh(
                     )#프레임 단위로 실시간 이미지 변수 처리.
                 
             if cv2.waitKey(1) & 0xFF ==ord('p'):
-                picture.picture_save(save_image)
+                count = count + 1
+                picture.picture_save(save_image,count)
 
             save_image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
             cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))#

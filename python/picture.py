@@ -55,8 +55,14 @@ def start_take(filter_image_path,image,x,y,
 
   filter_area = filter_area.astype('uint8')
   filter_mask = filter_mask.astype('uint8')
-  filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
-  filter_area = cv2.resize(filter_area,(filter_width,filter_height))
+  try:
+    filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
+  except:
+     return 0
+  try:
+    filter_area = cv2.resize(filter_area,(filter_width,filter_height))
+  except:
+     return 0
   #print("filter_area shape:", filter_area.shape)
   #print("filter_mask shape:", filter_mask.shape)
   #print(type(filter_area),type(filter_mask))
@@ -92,8 +98,14 @@ def start_take(filter_image_path,image,x,y,
   '''
   #return save_image
     
-def picture_save(save_image):
-  count = count + 1
-  cv2.imwrite("fr'{count}_filter_image.jpg'",save_image)
-  print("이미지 저장 완료")
+def picture_save(save_image,count):
+  if count < 4:
+    cv2.imwrite(fr'"{count}_filter_image.jpg"',save_image)
+    print("이미지 저장 완료")
+
+  elif count == 4:
+    cv2.imwrite(fr'"{count}_filter_image.jpg"',save_image)
+    print("이미지 촬영 종료")
+  else:
+     raise ValueError(fr'"인생 4컷 임마 인생 4컷 인생 {count}컷이 아니라"')
   return 0
