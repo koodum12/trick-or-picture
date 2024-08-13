@@ -3,8 +3,7 @@ import mediapipe as mp # 구글에서 불러온 mediapipe 라이브러리 불러
 import sys 
 import filter #필터라는 라이브러리가 다른게 또 있네?
 import picture
-import time
-
+import numpy as np
 
 image_width = 640              
 image_height = 480 
@@ -65,13 +64,17 @@ with mp_face_mesh.FaceMesh(
                     filter_height,filter_width,
                     landmark_225_x,landmark_446_x,landmark_9_y,landmark_6_y
                     )#프레임 단위로 실시간 이미지 변수 처리.
+                if save_image == 0:
+                    print("fuck")
+            save_image = np.uint8(save_image)
+
+            save_image = cv2.cvtColor(save_image,cv2.COLOR_RGB2BGR)
                 
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 count = count + 1
                 picture.picture_save(save_image,count)
 
-            save_image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
-            cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))#
+            cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(save_image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
             
                 break
