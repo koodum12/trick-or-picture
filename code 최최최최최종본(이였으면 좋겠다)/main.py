@@ -61,20 +61,20 @@ with mp_face_mesh.FaceMesh(
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
                 landmark_6_y = int(face_landmarks.landmark[6].y * image_height)
                 filter_width = landmark_446_x - landmark_225_x
-                filter_height = landmark_6_y - landmark_9_y
+                print("landmark_x",landmark_446_x,landmark_225_x)
+                print("landmark_y",landmark_6_y,landmark_9_y)
+                print("width,height",filter_width,filter_height)
+                filter_height = (landmark_6_y - landmark_9_y)*2
+
                 image = picture.take_pictures_start(filter_image_path,image,
-                                                         x,y,filter_width,filter_height)
+                                                    x,y,filter_width,filter_height)
 
 
-                #1.이미지 파일 경로  2. 기본 이미지(동영상) 3.x좌표 4.y좌표
-                if filter_image_path == None:
-                    image == image
-                #elif save_image == picture.
-                    
-            image = np.uint8(image)
-    
+            #if image == None or image == 0:
+            #    breakz
+            
+            #print(image.shape)
             image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
-                
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 count = count + 1
                 picture.pull_image(image,count)
