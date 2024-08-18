@@ -54,8 +54,8 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             for i, face_landmarks in enumerate(results.multi_face_landmarks):                
-                x = face_landmarks.landmark[168].x
-                y = face_landmarks.landmark[168].y
+                x = face_landmarks.landmark[103].x * image_width
+                y = face_landmarks.landmark[103].y * image_height
                 landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
                 landmark_446_x = int(face_landmarks.landmark[446].x*image_width)
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
@@ -66,6 +66,7 @@ with mp_face_mesh.FaceMesh(
                 print("width,height",filter_width,filter_height)
                 filter_height = (landmark_6_y - landmark_9_y)*2
 
+                print(f'x{x} y{y}')
                 image = picture.take_pictures_start(filter_image_path,image,
                                                     x,y,filter_width,filter_height)
 
@@ -74,12 +75,12 @@ with mp_face_mesh.FaceMesh(
             #    breakz
             
             #print(image.shape)
-            image = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 count = count + 1
                 picture.pull_image(image,count)
 
-            cv2.imshow('MediaPipe Face Mesh(Puleugo)', cv2.flip(image, 1))
+            cv2.imshow('깔깔이', cv2.flip(image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
             
                 break

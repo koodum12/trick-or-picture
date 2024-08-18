@@ -1,5 +1,7 @@
 import mediapipe
 import cv2
+import numpy as np
+
 
 def take_pictures_start(filter_image_path,image,
                        x,y,filter_width,filter_height):
@@ -13,7 +15,12 @@ def take_pictures_start(filter_image_path,image,
   if image is None or image.shape[0] <= 0 or image.shape[1] <= 0:
     raise ValueError("이미지 사이즈가 왜 0? 이건 좀.")
   
-  filter_image = cv2.imread(filter_image_path, cv2.IMREAD_COLOR)
+  filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
+  if filter_width != 0:
+      filter_image = cv2.resize(filter_image,(filter_width,filter_height))
+  else:
+    print("size change error (filter_image)")
+
   image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
   cv2.imshow("filter_image",filter_image)
 
@@ -31,17 +38,73 @@ def take_pictures_start(filter_image_path,image,
   print("1: ",i_h)
   print("2: ",i_w)
   print(image)
+  x = int(x)
+  y = int(y)
   filter_area = image[
-      top_left[1]: top_left[1]+filter_height,
-      top_left[0]: top_left[0]+filter_width
+      y: y+filter_height,
+      x: x+filter_width
   ] 
+  if filter_area.shape[0] == 0 or filter_area.shape[1] == 0:
+    print(f"filter_area의 크기가 0이거나 유효하지 않습니다. top_left 좌표: {top_left}, 필터 너비: {filter_width}, 필터 높이: {filter_height}")
+  cv2.imshow("바보멍충이",filter_area)
+  filter_mask = filter_image
+  _,filter_mask = cv2.threshold(filter_mask, 25, 255, cv2.THRESH_BINARY_INV)
+  filter_area = filter_area.astype('uint8')
+  filter_mask = filter_mask.astype('uint8')
 
-  if filter_area.shape[0] == 0 or filter_area.shape[1] == 1:
-     print("filter_area is 0 or None")
+
+  try:
+    filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
+    filter_mask = cv2.cvtColor(filter_mask, cv2.COLOR_BGR2RGB)
+
+    print(filter_mask.shape)
+  except:
+     print("63")
+     return 0
+  
+
+  try:
+    filter_area = cv2.resize(filter_area,(filter_width,filter_height))
+    filter_area = cv2.cvtColor(filter_area, cv2.COLOR_BGR2RGB)
+
+    print(filter_mask.shape)
+  except:
+     print("67")
+     return 0
+  
+  print(filter_area.dtype)  # 확인
+  print(filter_mask.dtype)  # 확인
+
+  scale = 1.0
+  offset = 128
+
+  filter_mask = (scale * filter_mask + offset).astype(np.uint8)
+  filter_area = (scale * filter_mask + offset).astype(np.uint8)
+
+  print("Filter area shape:", filter_area.shape, "dtype:", filter_area.dtype)
+  print("Filter mask shape:", filter_mask.shape, "dtype:", filter_mask.dtype)
+  filter_mask_gray = cv2.cvtColor(filter_mask, cv2.COLOR_RGB2GRAY)
+
+  # 마스크가 유효한 범위(0-255)의 값을 가지도록 확실히 합니다.
+  filter_mask_gray = cv2.normalize(filter_mask_gray, None, 0, 255, cv2.NORM_MINMAX)
+  filter_mask_gray = np.uint8(filter_mask_gray)
+    #try:
+  no_filter = cv2.bitwise_and(filter_area, filter_area, mask=filter_mask_gray)
+  #except:
+  #  print(f'filter_area{filter_area.shape} filter_mask{filter_mask.shape}')
+  #  return None
+  
+  final_filter = cv2.add(no_filter, filter_image)
+  final_filter = cv2.cvtColor(final_filter,cv2.COLOR_BGR2RGBA)
+  print(f'final_filter:{final_filter.shape}')
+  print(y,x)
+  image[
+      y: y+filter_height,
+      x: x+filter_width
+    ] = final_filter
+
   print(filter_area.shape)
-  #image = cv2.add(image,filter_image)
-  ##while(1):
-    #cv2.imshow("sdf",image)
+
   return image
 
 
