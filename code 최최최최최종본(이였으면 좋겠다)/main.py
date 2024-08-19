@@ -64,11 +64,11 @@ with mp_face_mesh.FaceMesh(
                 print("landmark_x",landmark_446_x,landmark_225_x)
                 print("landmark_y",landmark_6_y,landmark_9_y)
                 print("width,height",filter_width,filter_height)
-                filter_height = (landmark_6_y - landmark_9_y)*2
+                filter_height = (landmark_6_y - landmark_9_y)
 
                 print(f'x{x} y{y}')
                 image = picture.take_pictures_start(filter_image_path,image,
-                                                    x,y,filter_width,filter_height)
+                                                    x,y,filter_width*2,filter_height*2)
 
 
             #if image == None or image == 0:
@@ -80,7 +80,7 @@ with mp_face_mesh.FaceMesh(
                 count = count + 1
                 picture.pull_image(image,count)
 
-            cv2.imshow('깔깔이', cv2.flip(image, 1))
+            cv2.imshow('image', cv2.flip(image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
             
                 break

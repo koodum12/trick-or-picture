@@ -17,7 +17,7 @@ def take_pictures_start(filter_image_path,image,
   
   filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
   if filter_width != 0:
-      filter_image = cv2.resize(filter_image,(filter_width,filter_height))
+      filter_image = cv2.resize(filter_image,(filter_width ,filter_height))
   else:
     print("size change error (filter_image)")
 
@@ -31,14 +31,14 @@ def take_pictures_start(filter_image_path,image,
   i_h,i_w,_ = image.shape
   
   if x + filter_width > i_w or y + filter_height > i_h:
-    raise ValueError("조성현 바보(20 line) (필터 이미지가 배경 이미지를 벗어났습니다)")
+      raise ValueError("조성현 바보(20 line) (필터 이미지가 배경 이미지를 벗어났습니다)")
   
   top_left = (int(x-filter_width/2),int(y-filter_height/2))
 
   print("1: ",i_h)
   print("2: ",i_w)
   print(image)
-  x = int(x)
+  x = int(x) 
   y = int(y)
   filter_area = image[
       y: y+filter_height,
@@ -55,7 +55,7 @@ def take_pictures_start(filter_image_path,image,
 
   try:
     filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
-    filter_mask = cv2.cvtColor(filter_mask, cv2.COLOR_BGR2RGB)
+    filter_mask = cv2.cvtColor(filter_mask, cv2.IMREAD_UNCHANGED)
 
     print(filter_mask.shape)
   except:
@@ -91,9 +91,9 @@ def take_pictures_start(filter_image_path,image,
     #try:
   no_filter = cv2.bitwise_and(filter_area, filter_area, mask=filter_mask_gray)
   #except:
-  #  print(f'filter_area{filter_area.shape} filter_mask{filter_mask.shape}')
+  #  
   #  return None
-  
+  print(f'no_filter{no_filter.shape} filter_mask{filter_image.shape}')
   final_filter = cv2.add(no_filter, filter_image)
   final_filter = cv2.cvtColor(final_filter,cv2.COLOR_BGR2RGBA)
   print(f'final_filter:{final_filter.shape}')

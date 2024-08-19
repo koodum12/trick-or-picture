@@ -3,9 +3,7 @@ import filter
 import mediapipe
 import os
 def checknumber(filter_number):
-  match filter_number:
-    case 0:
-      return None
+
   filter_image_path = fr'C:\Users\user\Desktop\Obsidian\trick-or-picture\img\{filter_number}.png'
   print(filter_image_path)
   
