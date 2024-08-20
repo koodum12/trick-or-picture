@@ -67,7 +67,8 @@ with mp_face_mesh.FaceMesh(
                 filter_height = (landmark_6_y - landmark_9_y)
 
                 print(f'x{x} y{y}')
-                image = picture.take_pictures_start(filter_image_path,image,
+                if x != None and y != None:
+                    image = picture.take_pictures_start(filter_image_path,image,
                                                     x,y,filter_width*2,filter_height*2)
 
 
