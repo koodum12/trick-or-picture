@@ -54,8 +54,8 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             for i, face_landmarks in enumerate(results.multi_face_landmarks):                
-                x = face_landmarks.landmark[103].x * image_width
-                y = face_landmarks.landmark[103].y * image_height
+                x = face_landmarks.landmark[168].x * image_width
+                y = face_landmarks.landmark[168].y * image_height
                 landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
                 landmark_446_x = int(face_landmarks.landmark[446].x*image_width)
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)

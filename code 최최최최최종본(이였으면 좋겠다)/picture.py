@@ -12,17 +12,19 @@ def take_pictures_start(filter_image_path,image,
     print("10번 오류")
   else:
     print("width,height",filter_width,filter_height)
+    
   if image is None or image.shape[0] <= 0 or image.shape[1] <= 0:
     raise ValueError("이미지 사이즈가 왜 0? 이건 좀.")
   
   filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
+  cv2.imshow("filter_image",filter_image)
+  print(f'filter_image.shape:{filter_image.shape}')
   if filter_width != 0:
       filter_image = cv2.resize(filter_image,(filter_width ,filter_height))
   else:
     print("size change error (filter_image)")
 
   image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
-  cv2.imshow("filter_image",filter_image)
 
   filter_height,filter_width = int(filter_height),int(filter_width)
   #filter_image = cv2.resize(filter_image,(filter_height,filter_width))
@@ -55,7 +57,7 @@ def take_pictures_start(filter_image_path,image,
 
   try:
     filter_mask = cv2.resize(filter_mask,(filter_width,filter_height))
-    filter_mask = cv2.cvtColor(filter_mask, cv2.IMREAD_UNCHANGED)
+    filter_mask = cv2.cvtColor(filter_mask, cv2.COLOR_BGR2RGB)
 
     print(filter_mask.shape)
   except:
@@ -96,6 +98,8 @@ def take_pictures_start(filter_image_path,image,
   print(f'no_filter{no_filter.shape} filter_mask{filter_image.shape}')
   final_filter = cv2.add(no_filter, filter_image)
   final_filter = cv2.cvtColor(final_filter,cv2.COLOR_BGR2RGBA)
+  #final_filter = cv2.cvtColor(final_filter,cv2.IMREAD_UNCHANGED)
+
   print(f'final_filter:{final_filter.shape}')
   print(y,x)
   image[
