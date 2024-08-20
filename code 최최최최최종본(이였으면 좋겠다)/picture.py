@@ -9,7 +9,7 @@ def take_pictures_start(filter_image_path,image,
   x,y = int(x),int(y)
   i_h,i_w,_ = image.shape
   filter_width,filter_height = int(filter_width/2),int(filter_height/2)
-
+  image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
 
   if filter_image_path is None:
     print("이미지? 그게 뭐꼬? 그런거 없으니까 돌아가라")
