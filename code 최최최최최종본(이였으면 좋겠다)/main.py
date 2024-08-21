@@ -4,6 +4,7 @@ import sys
 import filter #필터라는 라이브러리가 다른게 또 있네?
 import picture
 import numpy as np
+import math
 
 image_width = 640              
 image_height = 480 
@@ -15,7 +16,7 @@ mp_face_mesh = mp.solutions.face_mesh
 filter_number = int(input())
 filter_image_path = filter.checknumber(filter_number)
 
-people_number = int(input())
+people_number = int(input()) 
 if filter_image_path == "fail":
     sys.exit()#고칠예정(maybe)
 
@@ -50,10 +51,11 @@ with mp_face_mesh.FaceMesh(
 
         image.flags.writeable = False #cv 성능 최적화를 위해 사용but 오류 가능성 있어서 잠시 봉인
         results = face_mesh.process(image)#얼굴 렌드마크 처리
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)#rgb값으로 변경
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)#rgb값으로 변경
 
         if results.multi_face_landmarks:
-            for i, face_landmarks in enumerate(results.multi_face_landmarks):                
+            use_number = 0
+            for i, face_landmarks in enumerate( results.multi_face_landmarks):                
                 x = face_landmarks.landmark[168].x * image_width
                 y = face_landmarks.landmark[168].y * image_height
                 landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
@@ -65,11 +67,21 @@ with mp_face_mesh.FaceMesh(
                 print("landmark_y",landmark_6_y,landmark_9_y)
                 print("width,height",filter_width,filter_height)
                 filter_height = (landmark_6_y - landmark_9_y)
-
                 print(f'x{x} y{y}')
+
+                a = landmark_446_x - landmark_225_x
+                b = int(face_landmarks.landmark[446].y*image_height) - int(face_landmarks.landmark[225].y*image_height) 
+
+
+                print(f'degree예정:{a}   {b}')
+                rad = math.atan2(a,b)
+                deg = rad*180 //math.pi
+                print(f'deg{deg}')
+                
                 if x != None and y != None:
                     image = picture.take_pictures_start(filter_image_path,image,
-                                                    x,y,filter_width*2,filter_height*2)
+                                                    x,y,filter_width*2,filter_height*2,use_number,deg)
+                    use_number += 1
 
 
             #if image == None or image == 0:
@@ -80,7 +92,6 @@ with mp_face_mesh.FaceMesh(
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 count = count + 1
                 picture.pull_image(image,count)
-
             cv2.imshow('image', cv2.flip(image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
             
