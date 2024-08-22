@@ -37,7 +37,7 @@ def take_pictures_start(filter_image_path,image,
   f_w,_,_ = filter_image.shape
   print(type(f_w))
   ratio = filter_width / f_w
-  
+
   filter_height = int(filter_height / ratio)
   print(filter_width,filter_height)
 
@@ -76,6 +76,30 @@ def take_pictures_start(filter_image_path,image,
     
 
   return image
+
+def frame_image(image,frame_image_path):
+
+  image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
+  
+  if frame_image_path == None:
+    return image
+  
+  i_h,i_w,_ = image.shape
+  print(i_h,i_w)
+  frame_image = cv2.imread(frame_image_path,cv2.COLOR_BGR2RGBA)
+  frame_image = cv2.resize(frame_image,dsize=(i_h,i_w))
+  frame_alpha = frame_image[:, : ,3]
+  frame_mask = frame_alpha / 255
+  for i in range(0,3):
+    
+    image[:,:,i] = (
+      (frame_image[:, : , i] * frame_mask) + 
+      (image[:,:,i] * ( 1 - frame_mask ))
+      )
+  
+  
+  return image
+
 
 
 

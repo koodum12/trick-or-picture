@@ -13,10 +13,14 @@ count = int(0)
 #mp_drawing_styles =mp_drawing.DrawingSpec(color=(0,0,0),thickness = 10 ) 
 mp_face_mesh = mp.solutions.face_mesh
 
-filter_number = int(input())
+filter_number = int(input("안경 골라"))
 filter_image_path = filter.checknumber(filter_number)
 
-people_number = int(input()) 
+frame_number = int(input("필터 프레임 골라"))
+frame_image_path = filter.frame_filter(frame_number)
+
+people_number = int(input("몇명? 나는 그것이 궁굼해"))
+
 if filter_image_path == "fail":
     sys.exit()#고칠예정(maybe)
 
@@ -55,6 +59,11 @@ with mp_face_mesh.FaceMesh(
 
         if results.multi_face_landmarks:
             use_number = 0
+
+
+            image = picture.frame_image(image,frame_image_path)
+
+
             for i, face_landmarks in enumerate( results.multi_face_landmarks):                
                 x = face_landmarks.landmark[168].x * image_width
                 y = face_landmarks.landmark[168].y * image_height

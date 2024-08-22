@@ -13,7 +13,12 @@ def checknumber(filter_number):
       print(f"파일이 존재하지 않습니다: {filter_image_path}")
       return None
 
-  
+def frame_filter(frame_number):
+
+    frame_image_path = fr'C:\Users\user\Desktop\Obsidian\trick-or-picture\frame_image\{frame_number}.png'
+    if frame_image_path == None:
+        exit() 
+    return frame_image_path
 
       
 #1.도트 썬글라스
