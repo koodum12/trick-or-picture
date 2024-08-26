@@ -37,11 +37,11 @@ def take_pictures_start(filter_image_path,image,
 
   filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
   f_w,_,_ = filter_image.shape
-  print(type(f_w))
+  #print(type(f_w))
   ratio = filter_width / f_w
 
   filter_height = int(filter_height / ratio)
-  print(filter_width,filter_height)
+  #print(filter_width,filter_height)
 
   filter_image = cv2.resize(filter_image,dsize=(filter_width*2,filter_height*2))
   filter_image = imutils.rotate_bound(filter_image,0)
@@ -62,7 +62,7 @@ def take_pictures_start(filter_image_path,image,
           image[y+h,x+w] = image[h,x]
   """
   for i in range(0,3):
-    print(filter_image[:, : , i].shape,image[y-filter_height:y+filter_height, x - filter_width :x + filter_width,i].shape)
+    #print(filter_image[:, : , i].shape,image[y-filter_height:y+filter_height, x - filter_width :x + filter_width,i].shape)
 
     if filter_width + x + 10 >i_w or x - filter_width - 10 < 0:
       return image

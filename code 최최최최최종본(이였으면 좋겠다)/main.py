@@ -49,7 +49,7 @@ with mp_face_mesh.FaceMesh(
         min_tracking_confidence=0.5) as face_mesh: #1.얼굴 감지 갯수,2.랜드마크 정밀 조작,3.얼굴 감지 정확도 최소,4.얼굴 추적 최소 정확도.
     while cap.isOpened():#웹캠 열려있을 때.
         success, image = cap.read()#프레임 읽어오는 함수 success = 제대로 읽혔는지 image = 프레임별 이미지
-        if not success:#
+        if not success:
             print("웹캠을 찾을 수 없습니다,큰일났습니다.")
             break
 
@@ -60,11 +60,24 @@ with mp_face_mesh.FaceMesh(
         if results.multi_face_landmarks:
             use_number = 0
 
+            if frame_image_path != 0:
+                image = picture.frame_image(image,frame_image_path)
 
-            image = picture.frame_image(image,frame_image_path)
+
+            for i, face_landmarks in enumerate( results.multi_face_landmarks):     
+
+                
+                           
+                if cv2.waitKey(1) & 0xFF == ord('b'):
+                    filter_number = input("필터 다시 정해봐")
+                    filter_image_path = filter.checknumber(filter_number)
+
+                if cv2.waitKey(1) & 0xFF == ord('n'):
+                    frame_number = input('프레임 이미지 다시 정해봐')
+                    frame_image_path = filter.frame_filter(frame_number)
 
 
-            for i, face_landmarks in enumerate( results.multi_face_landmarks):                
+
                 x = face_landmarks.landmark[168].x * image_width
                 y = face_landmarks.landmark[168].y * image_height
                 landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
@@ -72,25 +85,26 @@ with mp_face_mesh.FaceMesh(
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
                 landmark_6_y = int(face_landmarks.landmark[6].y * image_height)
                 filter_width = landmark_446_x - landmark_225_x
-                print("landmark_x",landmark_446_x,landmark_225_x)
-                print("landmark_y",landmark_6_y,landmark_9_y)
-                print("width,height",filter_width,filter_height)
+                #print("landmark_x",landmark_446_x,landmark_225_x)
+                #print("landmark_y",landmark_6_y,landmark_9_y)
+                #print("width,height",filter_width,filter_height)
                 filter_height = (landmark_6_y - landmark_9_y)
-                print(f'x{x} y{y}')
+                #print(f'x{x} y{y}')
 
                 a = landmark_446_x - landmark_225_x
                 b = int(face_landmarks.landmark[446].y*image_height) - int(face_landmarks.landmark[225].y*image_height) 
 
 
-                print(f'degree예정:{a}   {b}')
+                #print(f'degree예정:{a}   {b}')
                 rad = math.atan2(a,b)
                 deg = rad*180 //math.pi
-                print(f'deg{deg}')
+                #print(f'deg{deg}')
                 
                 if x != None and y != None:
-                    image = picture.take_pictures_start(filter_image_path,image,
+                    if filter_image_path != 0:
+                        image = picture.take_pictures_start(filter_image_path,image,
                                                     x,y,filter_width*2,filter_height*2,use_number,deg)
-                    use_number += 1
+                        use_number += 1
 
 
             #if image == None or image == 0:
@@ -98,9 +112,13 @@ with mp_face_mesh.FaceMesh(
             
             #print(image.shape)
 
+
+
             if cv2.waitKey(1) & 0xFF ==ord('p'):
                 count = count + 1
                 picture.pull_image(image,count)
+
+
             cv2.imshow('image', cv2.flip(image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
             
