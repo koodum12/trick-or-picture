@@ -44,7 +44,7 @@ filter_height = []
 
 with mp_face_mesh.FaceMesh(
         max_num_faces=people_number,
-        refine_landmarks=True,
+         refine_landmarks=True,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as face_mesh: #1.얼굴 감지 갯수,2.랜드마크 정밀 조작,3.얼굴 감지 정확도 최소,4.얼굴 추적 최소 정확도.
     while cap.isOpened():#웹캠 열려있을 때.
@@ -55,7 +55,7 @@ with mp_face_mesh.FaceMesh(
 
         image.flags.writeable = False #cv 성능 최적화를 위해 사용but 오류 가능성 있어서 잠시 봉인
         results = face_mesh.process(image)#얼굴 렌드마크 처리
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)#rgb값으로 변경
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)#rgb값으로 변경
 
         if results.multi_face_landmarks:
             use_number = 0

@@ -8,12 +8,13 @@ import imutils
 def take_pictures_start(filter_image_path,image,
                        x,y,filter_width,filter_height,use_number,deg):
 
-    
+  cv2.imshow("image-1",image)
   x,y = int(x),int(y)
   i_h,i_w,_ = image.shape
   filter_width,filter_height = int(filter_width/2),int(filter_height/2)
-  if use_number == 0:
-    image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
+
+  if x == 0:
+    return image
 
   if filter_image_path is None:
     print("이미지? 그게 뭐꼬? 그런거 없으니까 돌아가라")
@@ -22,6 +23,7 @@ def take_pictures_start(filter_image_path,image,
 
   if filter_width == 0 or filter_height == 0:
     print("filte가 안보일텐데(filter_width,filter_height) 크기가 0임")
+    return image
   else:
     print("width,height",filter_width,filter_height)
     
@@ -79,24 +81,24 @@ def take_pictures_start(filter_image_path,image,
 
 def frame_image(image,frame_image_path):
 
-  image = cv2.cvtColor(image,cv2.COLOR_BGR2RGBA)
-  
+
   if frame_image_path == None:
     return image
   
-  i_h,i_w,_ = image.shape
-  print(i_h,i_w)
-  frame_image = cv2.imread(frame_image_path,cv2.COLOR_BGR2RGBA)
+  i_w,i_h,_ = image.shape
+
+ 
+  frame_image = cv2.imread(frame_image_path, cv2.IMREAD_UNCHANGED)
   frame_image = cv2.resize(frame_image,dsize=(i_h,i_w))
+
   frame_alpha = frame_image[:, : ,3]
   frame_mask = frame_alpha / 255
+
   for i in range(0,3):
-    
     image[:,:,i] = (
       (frame_image[:, : , i] * frame_mask) + 
       (image[:,:,i] * ( 1 - frame_mask ))
       )
-  
   
   return image
 

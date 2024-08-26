@@ -13,6 +13,11 @@ def checknumber(filter_number):
       print(f"파일이 존재하지 않습니다: {filter_image_path}")
       return None
 
+
+#1.도트 썬글라스
+#2.부터 정해야 하는데.... 이미지가 없다!
+
+
 def frame_filter(frame_number):
 
     frame_image_path = fr'C:\Users\user\Desktop\Obsidian\trick-or-picture\frame_image\{frame_number}.png'
@@ -21,5 +26,6 @@ def frame_filter(frame_number):
     return frame_image_path
 
       
-#1.도트 썬글라스
-#2.부터 정해야 하는데.... 이미지가 없다!
+#1.크리스마스 느낌 프레임
+#2.필름 프레임
+#3.부터 정해야 하는데.... 이미지가 없다!
