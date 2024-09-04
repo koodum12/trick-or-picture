@@ -1,10 +1,10 @@
 import cv2
 import mediapipe as mp # 구글에서 불러온 mediapipe 라이브러리 불러오기
 import sys 
-import filter #필터라는 라이브러리가 다른게 또 있네?
-import picture
+import filter,picture,inputPath 
 import numpy as np
 import math
+import asyncio
 
 image_width = 640              
 image_height = 480 
@@ -41,10 +41,9 @@ filter_height = []
 
 
 
-
 with mp_face_mesh.FaceMesh(
         max_num_faces=people_number,
-         refine_landmarks=True,
+        refine_landmarks=True,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as face_mesh: #1.얼굴 감지 갯수,2.랜드마크 정밀 조작,3.얼굴 감지 정확도 최소,4.얼굴 추적 최소 정확도.
     while cap.isOpened():#웹캠 열려있을 때.
@@ -67,15 +66,6 @@ with mp_face_mesh.FaceMesh(
             for i, face_landmarks in enumerate( results.multi_face_landmarks):     
 
                 
-                           
-                if cv2.waitKey(1) & 0xFF == ord('b'):
-                    filter_number = input("필터 다시 정해봐")
-                    filter_image_path = filter.checknumber(filter_number)
-
-                if cv2.waitKey(1) & 0xFF == ord('n'):
-                    frame_number = input('프레임 이미지 다시 정해봐')
-                    frame_image_path = filter.frame_filter(frame_number)
-
 
 
                 x = face_landmarks.landmark[168].x * image_width
@@ -99,7 +89,7 @@ with mp_face_mesh.FaceMesh(
                 rad = math.atan2(a,b)
                 deg = rad*180 //math.pi
                 #print(f'deg{deg}')
-                
+                    
                 if x != None and y != None:
                     if filter_image_path != 0:
                         image = picture.take_pictures_start(filter_image_path,image,
@@ -107,26 +97,35 @@ with mp_face_mesh.FaceMesh(
                         use_number += 1
 
 
-            #if image == None or image == 0:
-            #    breakz
-            
-            #print(image.shape)
+                #if image == None or image == 0:
+                #    breakz
+                
+                #print(image.shape)
+                key = cv2.waitKey(1) & 0xFF
+
+                
+                if key == ord('b'):
+                    filter_number = inputPath.face_filter_input(filter_number)
+                    filter_image_path = filter.checknumber(filter_number)
+
+                if key == ord('n'):
+                    frame_number = inputPath.frame_filter_input(frame_number)
+                    frame_image_path = filter.frame_filter(frame_number)
 
 
-
-            if cv2.waitKey(1) & 0xFF ==ord('p'):
-                count = count + 1
-                picture.pull_image(image,count)
+                if key ==ord('p'):
+                    count = count + 1
+                    picture.pull_image(image,count)
 
 
             cv2.imshow('image', cv2.flip(image, 1))
             if cv2.waitKey(1) & 0xFF == ord('q'):#q를 누르면 while 문 나가기
-            
+                
                 break
-        
-        '''
-            1.영상 촬영 정지
-            2.landmark표시 정지
-            3.그 안에 있는 모든 것.
-        '''
+            
+            '''
+                1.영상 촬영 정지
+                2.landmark표시 정지
+                3.그 안에 있는 모든 것.
+            '''
 cap.release()#비디오 캡쳐 창 끄기(if 문 안에 break대신 넣을 예정)
