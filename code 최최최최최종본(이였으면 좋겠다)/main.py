@@ -101,7 +101,7 @@ with mp_face_mesh.FaceMesh(
                 #    breakz
                 
                 #print(image.shape)
-                key = cv2.waitKey(1) & 0xFF
+                key = cv2.waitKey(10) & 0xFF
 
                 
                 if key == ord('b'):
