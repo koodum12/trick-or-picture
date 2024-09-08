@@ -93,7 +93,7 @@ with mp_face_mesh.FaceMesh(
                 if x != None and y != None:
                     if filter_image_path != 0:
                         image = picture.take_pictures_start(filter_image_path,image,
-                                                    x,y,filter_width*2,filter_height*2,use_number,deg)
+                                                    x,y,filter_width*2,filter_height*2,use_number,(deg-90)*(-1))
                         use_number += 1
 
 

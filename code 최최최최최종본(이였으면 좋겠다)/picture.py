@@ -13,7 +13,7 @@ def take_pictures_start(filter_image_path,image,
   i_h,i_w,_ = image.shape
   filter_width,filter_height = int(filter_width/2),int(filter_height/2)
 
-  if x == 0:
+  if x == None:
     return image
 
   if filter_image_path is None:
@@ -43,8 +43,8 @@ def take_pictures_start(filter_image_path,image,
   filter_height = int(filter_height / ratio)
   #print(filter_width,filter_height)
 
+  filter_image = imutils.rotate_bound(filter_image,deg)
   filter_image = cv2.resize(filter_image,dsize=(filter_width*2,filter_height*2))
-  filter_image = imutils.rotate_bound(filter_image,0)
 
   filter_alpha = filter_image[:, : ,3]
   filter_mask = filter_alpha / 255
