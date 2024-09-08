@@ -101,19 +101,19 @@ with mp_face_mesh.FaceMesh(
                 #    breakz
                 
                 #print(image.shape)
-                key = cv2.waitKey(10) & 0xFF
+                key = cv2.waitKey(1) & 0xFF
 
                 
                 if key == ord('b'):
                     filter_number = inputPath.face_filter_input(filter_number)
                     filter_image_path = filter.checknumber(filter_number)
 
-                if key == ord('n'):
+                elif key == ord('n'):
                     frame_number = inputPath.frame_filter_input(frame_number)
                     frame_image_path = filter.frame_filter(frame_number)
 
 
-                if key ==ord('p'):
+                elif key ==ord('p'):
                     count = count + 1
                     picture.pull_image(image,count)
 

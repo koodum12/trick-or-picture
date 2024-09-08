@@ -4,10 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import imutils
 
-
 def take_pictures_start(filter_image_path,image,
                        x,y,filter_width,filter_height,use_number,deg):
 
+  if filter_image_path == 0:
+    return image
+    
   cv2.imshow("image-1",image)
   x,y = int(x),int(y)
   i_h,i_w,_ = image.shape
@@ -18,7 +20,7 @@ def take_pictures_start(filter_image_path,image,
 
   if filter_image_path is None:
     print("이미지? 그게 뭐꼬? 그런거 없으니까 돌아가라")
-    return None
+    return image
   
 
   if filter_width == 0 or filter_height == 0:
@@ -44,7 +46,10 @@ def take_pictures_start(filter_image_path,image,
   #print(filter_width,filter_height)
 
   filter_image = imutils.rotate_bound(filter_image,deg)
-  filter_image = cv2.resize(filter_image,dsize=(filter_width*2,filter_height*2))
+  #theta = int(math.radians(deg))
+  #new_width = abs(width * math.cos(theta)) + abs(height * math.sin(theta))
+  #new_height = abs(width * math.sin(theta)) + abs(height * math.cos(theta))
+  filter_image = cv2.resize(filter_image,dsize=(filter_width*2,filter_height*2))#filter_width and height -> new로 바꾸기
 
   filter_alpha = filter_image[:, : ,3]
   filter_mask = filter_alpha / 255
@@ -82,7 +87,7 @@ def take_pictures_start(filter_image_path,image,
 def frame_image(image,frame_image_path):
 
 
-  if frame_image_path == None:
+  if frame_image_path == 0:
     return image
   
   i_w,i_h,_ = image.shape
