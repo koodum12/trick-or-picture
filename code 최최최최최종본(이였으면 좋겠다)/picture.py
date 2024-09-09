@@ -22,6 +22,7 @@ def take_pictures_start(filter_image_path,image,
     print("이미지? 그게 뭐꼬? 그런거 없으니까 돌아가라")
     return image
   
+  print("-")
 
   if filter_width == 0 or filter_height == 0:
     print("filte가 안보일텐데(filter_width,filter_height) 크기가 0임")
@@ -34,7 +35,7 @@ def take_pictures_start(filter_image_path,image,
     raise ValueError("이미지 사이즈가 왜 0? 이건 좀.")
   
 
-  
+
   
 
   filter_image = cv2.imread(filter_image_path, cv2.IMREAD_UNCHANGED)
@@ -53,19 +54,7 @@ def take_pictures_start(filter_image_path,image,
 
   filter_alpha = filter_image[:, : ,3]
   filter_mask = filter_alpha / 255
-  """
-  for h in range(filter_height):
-    for w in range(filter_width):
-      if filter_image[h,w,3] > 0:
-        if h<filter_height/2 and w<filter_width/2:
-          image[y-h,x-w] = image[h,x]
-        elif h<filter_height/2:
-          image[y+h,x-w] = image[h,x]
-        elif w<filter_width/2:
-          image[y-h,x+w] = image[h,x]
-        else:
-          image[y+h,x+w] = image[h,x]
-  """
+
   for i in range(0,3):
     #print(filter_image[:, : , i].shape,image[y-filter_height:y+filter_height, x - filter_width :x + filter_width,i].shape)
 

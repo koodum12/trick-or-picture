@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp # 구글에서 불러온 mediapipe 라이브러리 불러오기
 import sys 
-import filter,picture,inputPath 
+import filter,picture 
 import numpy as np
 import math
 import asyncio
@@ -96,7 +96,6 @@ with mp_face_mesh.FaceMesh(
                                                     x,y,filter_width*2,filter_height*2,use_number,(deg-90)*(-1))
                         use_number += 1
 
-
                 #if image == None or image == 0:
                 #    breakz
                 
@@ -105,11 +104,11 @@ with mp_face_mesh.FaceMesh(
 
                 
                 if key == ord('b'):
-                    filter_number = inputPath.face_filter_input(filter_number)
+                    filter_number = int(input("필터 골라"))
                     filter_image_path = filter.checknumber(filter_number)
 
                 elif key == ord('n'):
-                    frame_number = inputPath.frame_filter_input(frame_number)
+                    frame_number = int(input("필터 프레임 골라"))
                     frame_image_path = filter.frame_filter(frame_number)
 
 
@@ -123,9 +122,4 @@ with mp_face_mesh.FaceMesh(
                 
                 break
             
-            '''
-                1.영상 촬영 정지
-                2.landmark표시 정지
-                3.그 안에 있는 모든 것.
-            '''
 cap.release()#비디오 캡쳐 창 끄기(if 문 안에 break대신 넣을 예정)
