@@ -75,11 +75,11 @@ with mp_face_mesh.FaceMesh(
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
                 landmark_6_y = int(face_landmarks.landmark[6].y * image_height)
                 filter_width = landmark_446_x - landmark_225_x
+                filter_height = int(filter_width * 0.3)
                 #print("landmark_x",landmark_446_x,landmark_225_x)
                 #print("landmark_y",landmark_6_y,landmark_9_y)
                 #print("width,height",filter_width,filter_height)
-                filter_height = (landmark_6_y - landmark_9_y)
-                #print(f'x{x} y{y}')
+                #print(f'x{x} y{y}') 
 
                 a = landmark_446_x - landmark_225_x
                 b = int(face_landmarks.landmark[446].y*image_height) - int(face_landmarks.landmark[225].y*image_height) 
