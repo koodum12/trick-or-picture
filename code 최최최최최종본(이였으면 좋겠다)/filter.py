@@ -25,6 +25,8 @@ def frame_filter(frame_number):
 
     if frame_number == 0:
         return 0
+    if frame_number >= 3:
+        return None
     frame_image_path = fr'C:\Users\user\Desktop\Obsidian\trick-or-picture\frame_image\{frame_number}.png'
 
     return frame_image_path

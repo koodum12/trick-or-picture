@@ -89,7 +89,8 @@ with mp_face_mesh.FaceMesh(
                 rad = math.atan2(a,b)
                 deg = rad*180 //math.pi
                 #print(f'deg{deg}')
-                    
+                
+                
                 if x != None and y != None:
                     if filter_image_path != 0:
                         image = picture.take_pictures_start(filter_image_path,image,

@@ -48,7 +48,7 @@ def take_pictures_start(filter_image_path,image,
   filter_image = imutils.rotate_bound(filter_image, deg)
 
   filter_rgb = filter_image[:, :, :3]
-  filter_alpha = filter_rgb / 255
+  filter_alpha = filter_image[:, :, 3] / 255
 
   # 필터 위치 계산
   h, w, _ = filter_image.shape
