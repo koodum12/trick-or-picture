@@ -68,14 +68,16 @@ with mp_face_mesh.FaceMesh(
                 
 
 
-                x = face_landmarks.landmark[168].x * image_width
-                y = face_landmarks.landmark[168].y * image_height
+                x = face_landmarks.landmark[197].x * image_width
+                y = face_landmarks.landmark[197].y * image_height
                 landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
                 landmark_446_x = int(face_landmarks.landmark[446].x*image_width)
                 landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
                 landmark_6_y = int(face_landmarks.landmark[6].y * image_height)
                 filter_width = landmark_446_x - landmark_225_x
-                filter_height = int(filter_width * 0.3)
+                filter_height = int(filter_width * 0.5)
+
+                
                 #print("landmark_x",landmark_446_x,landmark_225_x)
                 #print("landmark_y",landmark_6_y,landmark_9_y)
                 #print("width,height",filter_width,filter_height)
@@ -94,7 +96,7 @@ with mp_face_mesh.FaceMesh(
                 if x != None and y != None:
                     if filter_image_path != 0:
                         image = picture.take_pictures_start(filter_image_path,image,
-                                                    x,y,filter_width*2,filter_height*2,use_number,(deg-90)*(-1))
+                                                    x,y,filter_width*2,filter_height*2,use_number,(deg-82)*(-1))
                         use_number += 1
 
                 #if image == None or image == 0:
@@ -102,7 +104,7 @@ with mp_face_mesh.FaceMesh(
                 
                 #print(image.shape)
                 key = cv2.waitKey(1) & 0xFF
-
+                
                 
                 if key == ord('b'):
                     filter_number = int(input("필터 골라"))

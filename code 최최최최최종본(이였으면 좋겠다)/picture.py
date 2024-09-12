@@ -44,7 +44,9 @@ def take_pictures_start(filter_image_path,image,
       print("필터 이미지를 불러올 수 없습니다.")
       return image
 
+  filter_image = 
   filter_image = cv2.resize(filter_image, (filter_width * 2, filter_height * 2))
+  print(filter_image.shape)
   filter_image = imutils.rotate_bound(filter_image, deg)
 
   filter_rgb = filter_image[:, :, :3]
