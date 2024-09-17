@@ -68,14 +68,13 @@ with mp_face_mesh.FaceMesh(
                 
 
 
-                x = face_landmarks.landmark[197].x * image_width
-                y = face_landmarks.landmark[197].y * image_height
-                landmark_225_x = int(face_landmarks.landmark[225].x*image_width)
-                landmark_446_x = int(face_landmarks.landmark[446].x*image_width)
-                landmark_9_y = int(face_landmarks.landmark[9].y * image_height)
-                landmark_6_y = int(face_landmarks.landmark[6].y * image_height)
-                filter_width = landmark_446_x - landmark_225_x
-                filter_height = int(filter_width * 0.5)
+                x = face_landmarks.landmark[1].x * image_width
+                y = face_landmarks.landmark[1].y * image_height
+                landmark_152_y = int(face_landmarks.landmark[152].y*image_width)
+                landmark_10_y = int(face_landmarks.landmark[10].y*image_width)
+
+                filter_height = abs(int(landmark_10_y - landmark_152_y))
+                filter_width = int(filter_height * 0.5)
 
                 
                 #print("landmark_x",landmark_446_x,landmark_225_x)
@@ -83,12 +82,11 @@ with mp_face_mesh.FaceMesh(
                 #print("width,height",filter_width,filter_height)
                 #print(f'x{x} y{y}') 
 
-                a = landmark_446_x - landmark_225_x
-                b = int(face_landmarks.landmark[446].y*image_height) - int(face_landmarks.landmark[225].y*image_height) 
+                b = int(face_landmarks.landmark[152].x*image_height) - int(face_landmarks.landmark[10].x*image_height)
 
 
                 #print(f'degree예정:{a}   {b}')
-                rad = math.atan2(a,b)
+                rad = math.atan2(filter_height,b)
                 deg = rad*180 //math.pi
                 #print(f'deg{deg}')
                 
@@ -96,7 +94,7 @@ with mp_face_mesh.FaceMesh(
                 if x != None and y != None:
                     if filter_image_path != 0:
                         image = picture.take_pictures_start(filter_image_path,image,
-                                                    x,y,filter_width*2,filter_height*2,use_number,(deg-82)*(-1))
+                                                    x,y,filter_width*2,filter_height*2,use_number,int((deg-90)*1.2))
                         use_number += 1
 
                 #if image == None or image == 0:
