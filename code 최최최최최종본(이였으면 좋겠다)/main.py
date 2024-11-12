@@ -34,32 +34,20 @@ executor = ThreadPoolExecutor(max_workers=4)  # 이미지 처리를 위한 스�
 
 def calculate_face_angle(face_landmarks, image_width, image_height):
     try:
-        left_eye = [
-            (face_landmarks.landmark[33].x + face_landmarks.landmark[133].x) / 2,
-            (face_landmarks.landmark[33].y + face_landmarks.landmark[133].y) / 2
-        ]
-        right_eye = [
-            (face_landmarks.landmark[362].x + face_landmarks.landmark   [263].x) / 2,
-            (face_landmarks.landmark[362].y + face_landmarks.landmark[263].y) / 2
-        ]
-        
-        nose = [face_landmarks.landmark[4].x, face_landmarks.landmark[4].y]
-        mouth = [
-            (face_landmarks.landmark[61].x + face_landmarks.landmark[291].x) / 2,
-            (face_landmarks.landmark[61].y + face_landmarks.landmark[291].y) / 2
-        ]
+        left_eye = [(face_landmarks.landmark[33].x + face_landmarks.landmark[133].x) / 2,
+                    (face_landmarks.landmark[33].y + face_landmarks.landmark[133].y) / 2]
+        right_eye = [(face_landmarks.landmark[362].x + face_landmarks.landmark[263].x) / 2,
+                     (face_landmarks.landmark[362].y + face_landmarks.landmark[263].y) / 2]
         
         dx = (right_eye[0] - left_eye[0]) * image_width
         dy = (right_eye[1] - left_eye[1]) * image_height
         eye_angle = math.degrees(math.atan2(dy, dx))
-        final_angle = max(-45, min(45, eye_angle))
-        
-        return final_angle
+        return max(-45, min(45, eye_angle))
     except Exception as e:
         logger.error(f"Error calculating face angle: {e}")
-        return 0  # 기본 각도로 설정
+        return 0
 
-def apply_face_mesh_sync(image, face_mesh, filter_image_path):
+def apply_face_mesh(image, face_mesh, filter_image_path):
     try:
         image_height, image_width, _ = image.shape
         results = face_mesh.process(image)
@@ -67,7 +55,6 @@ def apply_face_mesh_sync(image, face_mesh, filter_image_path):
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
                 angle = calculate_face_angle(face_landmarks, image_width, image_height)
-                
                 x = int(face_landmarks.landmark[1].x * image_width)
                 y = int(face_landmarks.landmark[1].y * image_height)
                 
@@ -87,17 +74,10 @@ def apply_face_mesh_sync(image, face_mesh, filter_image_path):
         return image
     except Exception as e:
         logger.error(f"Error applying face mesh: {e}")
-        return image  # 처리에 실패해도 원본 이미지 반환
+        return image
 
 async def apply_face_mesh_async(image, face_mesh, filter_image_path):
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(
-        executor, 
-        apply_face_mesh_sync, 
-        image, 
-        face_mesh, 
-        filter_image_path
-    )
+    return await asyncio.to_thread(apply_face_mesh, image, face_mesh, filter_image_path)
 
 # 소켓 이벤트 핸들러
 @sio.event
@@ -116,7 +96,7 @@ async def receive_image(data):
         np_arr = np.frombuffer(img_data, np.uint8)
         image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         filter_number = data.get('filter_number', 0)
-        logger.info(f"Received filter number: {filter_number}")
+        logger.debug(f"Received filter number: {filter_number}")
 
         filter_image_path = filter_.checknumber(filter_number)
 
@@ -124,15 +104,10 @@ async def receive_image(data):
             logger.error("Failed to decode image")
             return
 
-        # BGR에서 RGB로 변환
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image.flags.writeable = True
+        image.flags.writeable = True  # image를 다시 쓸 수 있도록 설정
 
         # 비동기로 이미지 처리
         processed_image = await apply_face_mesh_async(image, face_mesh, filter_image_path)
-
-        # RGB에서 BGR로 변환
-        processed_image = cv2.cvtColor(processed_image, cv2.COLOR_RGB2BGR)
 
         # 필터링된 이미지를 Base64로 인코딩
         _, buffer = cv2.imencode('.jpg', processed_image)
